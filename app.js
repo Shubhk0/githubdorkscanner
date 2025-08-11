@@ -1,5 +1,5 @@
 // GitHub Dorker - Enhanced Application Logic with 150+ Dorks (Fixed Version)
-
+// by shubhk0
 // Enhanced Dork Database organized by category (Original + 72 New Path-Based Dorks)
 const DORK_DATABASE = {
     credentials: [
