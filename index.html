@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Dorker - Enhanced with 150+ Path-Based Queries</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>GitHub Dorker</h1>
+            <p class="subtitle">Enhanced with 150+ Path-Based Queries</p>
+            <div class="warning-banner">
+                <strong>⚠️ Ethical Use Only:</strong> This tool is intended for security research and authorized testing only. Always obtain proper permission before scanning repositories.
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="input-section card">
+                <div class="card__body">
+                    <h2>Search Configuration</h2>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Target Type</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="targetType" value="org" checked>
+                                <span>Organization</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="targetType" value="user">
+                                <span>User</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="targetType" value="repo">
+                                <span>Repository</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="targetType" value="global">
+                                <span>Global Search</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="targetName" class="form-label">Target Name</label>
+                        <input type="text" id="targetName" class="form-control" placeholder="e.g., microsoft, octocat, or owner/repo">
+                        <small class="form-text">Enter organization name, username, or repository (owner/repo format)</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="highRiskOnly">
+                                <span>High Risk Only</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="categoryFilter" class="form-label">Category Filter</label>
+                            <select id="categoryFilter" class="form-control">
+                                <option value="all">All Categories</option>
+                                <option value="credentials">Credentials</option>
+                                <option value="keys">Keys</option>
+                                <option value="tokens">Tokens</option>
+                                <option value="database">Database</option>
+                                <option value="configuration">Configuration</option>
+                                <option value="history">History</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="generateBtn" class="btn btn--primary">Generate Search URLs</button>
+                        <button id="openAllBtn" class="btn btn--secondary" disabled>Open All in Tabs</button>
+                        <button id="copyAllBtn" class="btn btn--outline" disabled>Copy All URLs</button>
+                        <button id="resetBtn" class="btn btn--outline">Reset</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="progress-section" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="progress-text">Generating search URLs...</div>
+            </section>
+
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <h2>Generated Search URLs</h2>
+                    <div class="results-stats">
+                        <span id="totalCount">0</span> dorks found
+                        <span class="stats-detail" id="pathBasedCount" style="margin-left: 12px; font-size: 12px; opacity: 0.8;"></span>
+                    </div>
+                </div>
+                
+                <div class="results-actions">
+                    <div class="tab-controls">
+                        <label for="tabLimit" class="form-label">Tab Limit:</label>
+                        <select id="tabLimit" class="form-control form-control--small">
+                            <option value="5">5 tabs</option>
+                            <option value="10" selected>10 tabs</option>
+                            <option value="20">20 tabs</option>
+                            <option value="50">50 tabs</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="resultsContainer" class="results-container"></div>
+            </section>
+
+            <section class="export-section card" id="exportSection" style="display: none;">
+                <div class="card__body">
+                    <h3>Export Options</h3>
+                    <div class="export-buttons">
+                        <button id="downloadCsvBtn" class="btn btn--secondary">Download CSV</button>
+                        <button id="generateBookmarkletBtn" class="btn btn--secondary">Generate Bookmarklet</button>
+                        <button id="createReportBtn" class="btn btn--secondary">Create Report</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="bookmarkletModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>GitHub Dorker Bookmarklet</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Drag this link to your bookmarks bar. When clicked on any GitHub page, it will automatically extract repository information and run searches:</p>
+                <div class="bookmarklet-container">
+                    <a href="#" id="bookmarkletLink" class="bookmarklet-link">GitHub Dorker</a>
+                </div>
+                <p><small>Or copy the JavaScript code and create a bookmark manually:</small></p>
+                <textarea id="bookmarkletCode" class="form-control" readonly rows="4"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Scan Report</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="reportContent"></div>
+                <div class="modal-actions">
+                    <button id="downloadReportBtn" class="btn btn--primary">Download Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
