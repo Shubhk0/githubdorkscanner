@@ -1,2 +1,2 @@
 # githubdorkscanner
-github dork scanner
+easy to use github dork scanner
